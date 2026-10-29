@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>CodeMobile</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0b0e14" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#f6f3ee" media="(prefers-color-scheme: light)"><link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="brand.css"></head><body>
+<header><button class="ib" onclick="chatMenu()" aria-label="Conversas">☰</button><div id="ttl"></div><button class="ib" onclick="chatNew()" aria-label="Nova conversa">✎</button></header>
+<div id="mt"></div>
+<section id="chat" class="on"></section><section id="files"></section>
+<section id="prev"><div class="r"><button class="s" onclick="pvR()">🔄 Recarregar</button><button class="s" onclick="runHtml(build(),2000).then(alert)">🐞 Console</button></div><iframe id="pv" sandbox="allow-scripts allow-forms allow-modals"></iframe></section>
+<section id="cfg"></section><section id="term"></section>
+<div id="mn" hidden></div><div id="dl" hidden></div>
+<div id="dr" hidden><div class="bk"></div><aside>
+<div class="dh"><span class="lg">&lt;/&gt;</span>CodeMobile<button class="s" data-a="close" aria-label="Fechar">✕</button></div>
+<button class="p" data-a="new">✎ Novo chat</button><input id="dsq" placeholder="Buscar conversas…">
+<div id="dlist"></div>
+<label>Projeto</label><select id="ps"></select>
+<label>Permissões do agente</label><select id="md"><option value="auto">⚡ Auto</option><option value="edits">✏️ Confirmar só apagar</option><option value="ask">✋ Perguntar tudo</option><option value="plan">🧭 Plano → aprovar</option></select>
+<div class="r"><button class="s" data-a="proj">＋ Novo projeto</button><button class="s" data-a="cfg">⚙️ Ajustes</button></div>
+</aside></div>
+<div class="bar" id="bar"><button class="s" id="plus" aria-label="Mais">＋</button><textarea id="in" placeholder="Peça algo ao agente…" rows="1"></textarea><button class="s" id="mic" aria-label="Voz">🎤</button><button class="p" id="send" aria-label="Enviar">↑</button></div>
+<nav><button data-t="chat" class="on">💬<br>Agente</button><button data-t="files">📁<br>Arquivos</button><button data-t="prev">▶<br>Preview</button><button data-t="cfg">⚙️<br>Ajustes</button><button data-t="term">⌨️<br>Terminal</button></nav>
+<input type="file" id="imp" multiple hidden>
+<script src="/cm-config.js"></script><script src="/cm-state.js"></script><script src="provedores.js"></script><script src="downloads.js"></script><script src="app.js"></script><script src="vsh.js"></script><script src="vsh2.js"></script><script src="extras.js"></script><script src="ext.js"></script><script src="ext2.js"></script><script src="img.js"></script><script src="apkcore.js"></script><script src="apksign.js"></script><script src="execore.js"></script><script src="pkgcore.js"></script><script src="pkg.js"></script><script src="reserva.js"></script><script src="nucleo.js"></script><script src="occore.js"></script><script src="oc.js"></script><script src="localcore.js"></script><script src="local.js"></script><script src="ocplus.js"></script></html>

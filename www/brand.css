@@ -1,0 +1,65 @@
+/* ===== Identidade CodeMobile: a marca </> (brasa laranja sobre tinta). Para voltar ao visual antigo, tire a linha do brand.css do index.html ===== */
+:root{color-scheme:dark light;--bg:#0b0e14;--c:#121722;--in:#0f1420;--ub:#1a1f2c;--code:#070a10;--b:#232b3b;--t:#e7eaf0;--m:#7f8ba3;--a:#d97757;--g:#4fd1c5;--sg:#4fd1c5;--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,Consolas,monospace}
+@media(prefers-color-scheme:light){:root{--bg:#f6f3ee;--c:#fffdf9;--in:#fffdf9;--ub:#efe8dd;--code:#efe9df;--b:#e1d8c9;--t:#15171c;--m:#6d7384;--a:#c4552f;--g:#0e8f86;--sg:#0e8f86}}
+body{font:15.5px/1.45 system-ui,-apple-system,"Inter","Segoe UI",Roboto,sans-serif;background:var(--bg)}
+code,pre,#tout,.trow input,.tc,#ttl small,#mt{font-family:var(--mono)}
+/* cabeçalho */
+header{border-bottom:1px solid var(--b);padding:6px 8px}
+#ttl b{font:600 14.5px var(--mono);letter-spacing:.2px}#ttl b:before{content:"</>";color:var(--a);margin-right:7px;font-weight:800;letter-spacing:-1.5px}
+#ttl small{color:var(--sg);font-size:11px}#ttl small:before{content:"~/"}
+#mt{color:var(--m);font-size:10.5px;letter-spacing:.3px}
+/* mensagens: usuário é uma linha de prompt, agente é texto limpo com trilho */
+.msg{font:15.5px/1.62 system-ui,-apple-system,"Inter",sans-serif;padding:2px 4px 2px 12px;border-left:2px solid var(--b);border-radius:0;background:none}
+.msg.u{align-self:stretch;max-width:100%;font:14.5px/1.5 var(--mono);color:var(--t);background:color-mix(in srgb,var(--a) 11%,var(--c));border:0;border-left:3px solid var(--a);border-radius:4px 14px 14px 4px;padding:9px 12px 9px 12px}
+.msg.u:before{content:"› ";color:var(--a);font-weight:700}
+/* chamadas de ferramenta: chips de terminal */
+.tc{background:var(--code);border:1px solid var(--b);border-left:3px solid var(--sg);border-radius:6px 12px 12px 6px;color:var(--m);font-size:12.5px;padding:6px 10px}
+.tc b{color:var(--sg);font-weight:600}.tc:before{content:"⌁ ";color:var(--sg)}
+.td{background:var(--c);border:1px dashed var(--b);border-radius:12px;font-family:var(--mono);font-size:12.5px}
+pre{background:var(--code);border:1px solid var(--b);border-radius:10px;font-family:var(--mono)}
+code{background:var(--code);color:var(--a);border-radius:5px}pre code{color:inherit;background:none}
+/* campos e botões */
+input,select,textarea{background:var(--in);border:1px solid var(--b);border-radius:12px}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--a);box-shadow:0 0 0 3px color-mix(in srgb,var(--a) 22%,transparent)}
+button.p{background:var(--a);color:#fff;border-radius:12px;font-weight:600;box-shadow:0 1px 0 #fff3 inset}
+button.s{background:var(--c);border:1px solid var(--b);color:var(--t);border-radius:12px}.s.on{background:var(--a)!important;border-color:var(--a);color:#fff}
+.f{background:var(--c);border:1px solid var(--b);border-radius:12px}
+label{font-family:var(--mono);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--m)}
+/* compositor */
+.bar{display:flex;align-items:flex-end;gap:4px;margin:4px 10px 8px;padding:6px;background:var(--in);border:1px solid var(--b);border-radius:18px;transition:border-color .15s,box-shadow .15s}
+.bar:focus-within{border-color:var(--a);box-shadow:0 0 0 3px color-mix(in srgb,var(--a) 20%,transparent)}
+.bar textarea{border:0;background:none;box-shadow:none!important;font:15.5px/1.4 system-ui,-apple-system,sans-serif!important}
+.bar button{width:42px;height:42px;min-height:0;padding:0;border-radius:12px;font-size:19px;border:0;background:none;color:var(--m)}.bar #plus.on{color:var(--a)}
+.bar #send{background:var(--a);color:#fff;font-size:21px;border-radius:12px}
+/* navegação */
+nav{border-top:1px solid var(--b);background:var(--bg);padding:0 4px 2px}
+nav button{margin:2px;border-radius:10px;font-family:var(--mono);font-size:10px;letter-spacing:.3px;color:var(--m)}
+nav button.on{background:none;color:var(--a);box-shadow:inset 0 2px 0 var(--a)}
+/* boas-vindas com a marca */
+.wl{margin:6vh 0 14px;text-align:center;background-image:radial-gradient(var(--b) 1px,transparent 1.4px);background-size:20px 20px;padding:34px 0 26px;border-radius:18px}
+.wl .lg{font:800 54px/1 var(--mono);color:var(--a);letter-spacing:-3px;text-shadow:0 0 28px color-mix(in srgb,var(--a) 45%,transparent)}
+.wl .cur{display:inline-block;width:.42em;height:.08em;margin-left:6px;background:var(--a);vertical-align:baseline;animation:cb 1.05s steps(1) infinite}
+@keyframes cb{50%{opacity:0}}
+.wl h1{font:600 22px var(--mono);margin:14px 0 2px;color:var(--t)}.wl p{color:var(--m);margin:0}
+/* gaveta */
+#dr aside{background:var(--bg);border-right:1px solid var(--b)}
+.dh{font:700 18px var(--mono);letter-spacing:-.3px}.dh .lg{color:var(--a);font:800 20px var(--mono);letter-spacing:-2px}
+.cr{border-radius:10px}.cr.on{background:var(--c);box-shadow:inset 3px 0 0 var(--a)}
+.sh{background:var(--bg);border-top:1px solid var(--b)}.mi:active{background:var(--c)}.sw.on{background:var(--a)}
+/* terminal */
+#term{gap:6px}
+#tout{background:var(--code);border:1px solid var(--b);border-radius:12px;padding:10px;color:var(--t);font-size:12.5px;line-height:1.5}
+.trow{background:var(--code);border:1px solid var(--b);border-radius:12px;padding:2px 6px;align-items:center}
+.trow span{color:var(--a);font:700 13px var(--mono);white-space:nowrap;max-width:46%;overflow:hidden;text-overflow:ellipsis}
+.trow input{border:0;background:none;box-shadow:none!important;padding:8px 4px}
+#tch .ch{font-family:var(--mono);font-size:12px;border-radius:8px;padding:6px 10px}
+/* barras finas */
+*{scrollbar-width:thin;scrollbar-color:var(--b) transparent}
+
+/* anexos da conversa */
+#atc{display:flex;gap:6px;padding:0 12px 4px;overflow-x:auto}#atc[hidden]{display:none}#atc .ch{white-space:nowrap;font:12px var(--mono);padding:5px 10px;border-radius:8px;color:var(--sg);border-color:color-mix(in srgb,var(--sg) 40%,var(--b))}
+
+/* painel de gerenciamento do Linux/Proot na aba Terminal */
+.linux-panel{display:flex;flex-direction:column;gap:9px;border:1px solid var(--b);border-radius:16px;padding:13px;background:var(--c);flex:0 0 auto}
+.linux-head{display:flex;align-items:flex-start;gap:10px;justify-content:space-between}.linux-head strong{display:block;font-size:15px;font-weight:650}.linux-head small{display:block;color:var(--m);font-size:11px;margin-top:3px}.linux-state{font-size:11px;border-radius:999px;padding:5px 8px;white-space:nowrap;border:1px solid var(--b)}.linux-state.ok{color:var(--g);border-color:color-mix(in srgb,var(--g) 50%,var(--b))}.linux-state.wait{color:var(--a);border-color:color-mix(in srgb,var(--a) 45%,var(--b))}.linux-state.bad{color:var(--m)}
+.linux-panel p{font-size:12px;color:var(--m);line-height:1.45;margin:0}.linux-meta{display:flex;flex-wrap:wrap;gap:6px}.linux-meta span{background:var(--code);border:1px solid var(--b);border-radius:7px;padding:4px 7px;color:var(--m);font:10px ui-monospace,monospace}.linux-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.linux-actions button{font-size:12px;padding:8px 7px;min-height:38px}.linux-actions .danger{border-color:color-mix(in srgb,#d45b5b 40%,var(--b));color:#d45b5b}.linux-note{font-size:10.5px!important;line-height:1.4!important;color:var(--m)!important}
