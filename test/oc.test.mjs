@@ -1,0 +1,33 @@
+// node --test test/oc.test.mjs — apply_patch, glob, regras de permissão e instruções por pasta (inspirados no opencode)
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
+const OC=new Function(fs.readFileSync(new URL('../www/occore.js',import.meta.url),'utf8')+';return OC')();
+const P=(...l)=>'*** Begin Patch\n'+l.join('\n')+'\n*** End Patch';
+test('patch: Add, Update com contexto, Delete e Move',()=>{const f={'a.js':'let a=1;\nfunction x(){\n  return a;\n}\n','old.txt':'bye\n','m.txt':'um\ndois\n'};
+ const r=OC.applyPatch(f,P('*** Add File: n/novo.txt','+oi','+tchau','*** Update File: a.js','@@ function x(){','-  return a;','+  return a+1;','*** Delete File: old.txt','*** Update File: m.txt','*** Move to: z/m2.txt',' um','-dois','+DOIS'));
+ const m=Object.fromEntries(r.changes.map(c=>[c.path,c.after]));assert.equal(m['n/novo.txt'],'oi\ntchau\n');assert.equal(m['a.js'],'let a=1;\nfunction x(){\n  return a+1;\n}\n');assert.equal(m['old.txt'],null);assert.equal(m['m.txt'],null);assert.equal(m['z/m2.txt'],'um\nDOIS\n');assert.equal(r.summary.length,4)});
+test('patch é atômico: se um trecho falha, nada muda e o erro diz qual',()=>{const f={'a.txt':'1\n2\n','b.txt':'x\n'};const antes=JSON.stringify(f);
+ assert.throws(()=>OC.applyPatch(f,P('*** Update File: a.txt','-1','+um','*** Update File: b.txt','-NAO EXISTE','+y')),/b\.txt: não achei este trecho/);assert.equal(JSON.stringify(f),antes)});
+test('patch tolera espaços finais, indentação e aspas tipográficas no contexto',()=>{const f={'a.txt':'  olá “mundo”  \nfim\n'};const r=OC.applyPatch(f,P('*** Update File: a.txt','-olá "mundo"','+oi','*** End of File'));assert.equal(r.changes[0].after,'oi\nfim\n')});
+test('patch: erros de uso são claros',()=>{const f={'a.txt':'x\n'};assert.throws(()=>OC.applyPatch(f,'*** Update File: a.txt'),/Begin Patch/);assert.throws(()=>OC.applyPatch(f,P('*** Add File: a.txt','+y')),/já existe/);assert.throws(()=>OC.applyPatch(f,P('*** Delete File: z.txt')),/não existe/);assert.throws(()=>OC.applyPatch(f,P('*** Add File: ../fora.txt','+y')),/caminho inválido/);assert.throws(()=>OC.applyPatch(f,P('*** Add File: /abs.txt','+y')),/caminho inválido/);assert.throws(()=>OC.applyPatch(f,P('*** Add File: n.txt','sem mais')),/começar com \+/)});
+test('patch: trecho só de adição vai para o fim; vários trechos no mesmo arquivo',()=>{const f={'a.txt':'a\nb\nc\n'};const r=OC.applyPatch(f,P('*** Update File: a.txt','@@','-a','+A','@@','-c','+C','@@','+fim'));assert.equal(r.changes[0].after,'A\nb\nC\nfim\n')});
+test('patch aceita cerca de código ao redor',()=>{const r=OC.applyPatch({},'```\n'+P('*** Add File: a','+1')+'\n```');assert.equal(r.changes[0].after,'1\n')});
+test('glob: ** , * , {a,b} e padrão sem barra em qualquer pasta',()=>{const f={'index.html':'','src/a.js':'','src/lib/b.js':'','src/c.css':'','README.md':''};assert.deepEqual(OC.glob(f,'src/**/*.js'),['src/a.js','src/lib/b.js']);assert.deepEqual(OC.glob(f,'*.js'),['src/a.js','src/lib/b.js']);assert.deepEqual(OC.glob(f,'**/*.{css,md}'),['README.md','src/c.css']);assert.deepEqual(OC.glob(f,'src/*.js'),['src/a.js'])});
+test('permissões: padrões bloqueiam segredos; codemobile.json acrescenta regras; última regra vence',()=>{const f={};assert.equal(OC.permRule(f,'read','.env'),'deny');assert.equal(OC.permRule(f,'read','app/.env.local'),'deny');assert.equal(OC.permRule(f,'read','x/.env.example'),'allow');assert.equal(OC.permRule(f,'read','src/a.js'),null);
+ f['codemobile.json']=JSON.stringify({permission:{shell:{'*':'ask','git *':'allow','rm *':'deny'},edit:{'dist/**':'deny'}}});
+ assert.equal(OC.shellPerm(f,'git status'),'allow');assert.equal(OC.shellPerm(f,'git status && rm -rf x'),'deny');assert.equal(OC.shellPerm(f,'ls'),'ask');assert.equal(OC.permRule(f,'edit','dist/a.js'),'deny');assert.equal(OC.permRule(f,'edit','src/a.js'),null)});
+test('instruções por pasta: AGENTS.md mais próximo, uma vez só',()=>{const f={'AGENTS.md':'raiz','src/AGENTS.md':'src','src/ui/CLAUDE.md':'ui'},seen=new Set();assert.deepEqual(OC.instrFor(f,'src/ui/a.js',seen).map(x=>x[0]),['src/ui/CLAUDE.md','src/AGENTS.md']);assert.deepEqual(OC.instrFor(f,'src/ui/b.js',seen),[]);assert.deepEqual(OC.instrFor(f,'x.js',new Set()),[])});
+test('integração: exec com apply_patch/glob, regras e instruções (app simulado)',async()=>{
+ const files={'src/AGENTS.md':'use tabs','src/a.js':'let a=1;\n','.env':'SEGREDO=1'},T=[],W=[],RO=[],SUB=[],GRP={write:[]},PD={},ico={},S={mode:'auto',perm:{}},p={files,hist:[1],cc:0};let saved=0,dlgs=[];
+ const env={files,OC,T,W,RO,SUB,GRP,PD,ico,S,CHATONLY:false,pj:()=>p,save(){saved++},ui(){},dlg:async o=>{dlgs.push(o.title);return 0}};
+ const code=fs.readFileSync(new URL('../www/oc.js',import.meta.url),'utf8');
+ const run=new Function(...Object.keys(env),'var exec=async(n,a)=>n=="read_file"?files[a.path]:"ORIG:"+n;var srvShell=async a=>"SH:"+a.cmd+":"+S.mode;var sys=()=>"base";'+code+';return{exec:(n,a)=>exec(n,a),sh:a=>srvShell(a),sys:()=>sys()}')(...Object.values(env));
+ assert.equal(T.length,2);assert.ok(W.includes('apply_patch')&&RO.includes('glob'));
+ assert.match(await run.exec('glob',{pattern:'**/*.js'}),/^src\/a\.js$/);assert.equal(await run.exec('delete_file',{path:'x'}),'ORIG:delete_file');
+ let r=await run.exec('read_file',{path:'src/a.js'});assert.match(r,/let a=1;[\s\S]*Instruções de src\/AGENTS\.md[\s\S]*use tabs/);r=await run.exec('read_file',{path:'src/a.js'});assert.doesNotMatch(r,/Instruções/);
+ assert.match(await run.exec('read_file',{path:'.env'}),/Bloqueado pela regra/);
+ r=await run.exec('apply_patch',{patch:P('*** Update File: src/a.js','-let a=1;','+let a=2;')});assert.match(r,/Patch aplicado:\nM src\/a\.js \(\+1 -1\)/);assert.equal(files['src/a.js'],'let a=2;\n');assert.ok(saved>0);
+ assert.match(await run.exec('apply_patch',{patch:P('*** Update File: src/a.js','-nada','+x')}),/nada foi alterado/);assert.equal(files['src/a.js'],'let a=2;\n');
+ S.mode='plan';assert.match(await run.exec('apply_patch',{patch:P('*** Add File: n','+1')}),/Modo plano/);S.mode='auto';
+ files['codemobile.json']=JSON.stringify({permission:{shell:{'git *':'allow','sudo *':'deny'}}});
+ assert.equal(await run.sh({cmd:'git status'}),'SH:git status:auto');assert.match(await run.sh({cmd:'sudo ls'}),/Bloqueado/);assert.equal(S.mode,'auto');
+ await run.exec('write_file',{path:'codemobile.json',content:'{}'});assert.ok(dlgs.includes('Permitir?'));assert.match(run.sys(),/apply_patch/)});
