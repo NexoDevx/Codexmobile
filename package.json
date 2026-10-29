@@ -1,0 +1,16 @@
+{
+  "name": "codemobile",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/server.test.mjs && node --test test/pasta.test.mjs && node test/vsh.test.mjs && node test/plugin.test.mjs && node test/apk.test.mjs && node --test test/exe.test.mjs && node --test test/pkg.test.mjs && node --test test/reserva.test.mjs && node --test test/nucleo.test.mjs && node --test test/carga.test.mjs && node --test test/oc.test.mjs && node --test test/provedores.test.mjs && node --test test/local.test.mjs && node --test test/ocplus.test.mjs && node --test test/lsp.test.mjs && node --test test/terminal-ui.test.mjs && node --test test/imports.test.mjs && node --test test/native-output.test.mjs && node --test test/proot-runtime.test.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/preferences": "^6.0.2"
+  }
+}

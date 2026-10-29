@@ -1,0 +1,16 @@
+{
+ "appId": "com.codemobile.app",
+ "appName": "CodeMobile",
+ "webDir": "www",
+ "plugins": {
+  "CapacitorHttp": {
+   "enabled": true
+  }
+ },
+ "server": {
+  "androidScheme": "https"
+ },
+ "android": {
+  "allowMixedContent": true
+ }
+}
