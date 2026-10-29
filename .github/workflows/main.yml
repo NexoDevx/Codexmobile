@@ -24,12 +24,10 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Configurar Node.js
+            - name: Configurar Node.js
         uses: actions/setup-node@v7
         with:
           node-version: '22'
-          cache: npm
-          cache-dependency-path: package-lock.json
 
       - name: Configurar Android SDK
         uses: android-actions/setup-android@v4
